@@ -5,112 +5,170 @@
   standardStylesheets="false"
   showHeader="false"
   sidebar="false"
+  docType="html-5.0"
 >
-  <html>
-    <head>
-      <style type="text/css">
-        body {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 12px;
-          color: #181818;
-          margin: 24px;
-        }
-        h1 {
-          font-size: 22px;
-          margin-bottom: 4px;
-        }
-        .subtitle {
-          color: #444;
-          margin-bottom: 24px;
-        }
-        .meta-table {
-          width: 100%;
-          margin-bottom: 24px;
-        }
-        .meta-table td {
-          padding: 4px 8px 4px 0;
-          vertical-align: top;
-        }
-        .meta-label {
-          font-weight: bold;
-          width: 140px;
-        }
-        table.line-items {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 8px;
-        }
-        table.line-items th,
-        table.line-items td {
-          border: 1px solid #d8dde6;
-          padding: 8px;
-          text-align: left;
-        }
-        table.line-items th {
-          background-color: #f3f3f3;
-          font-weight: bold;
-        }
-        .total-row {
-          margin-top: 16px;
-          text-align: right;
-          font-size: 14px;
-          font-weight: bold;
-        }
-        .empty-message {
-          color: #c23934;
-        }
-      </style>
-    </head>
-    <body>
-      <apex:outputPanel rendered="{!hasInvoice}">
-        <h1>Invoice</h1>
-        <div class="subtitle">{!invoice.Name}</div>
+  <head>
+    <style type="text/css">
+      @page {
+        margin: 1.2cm;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11pt;
+        color: #181818;
+      }
+      .title {
+        font-size: 20pt;
+        font-weight: bold;
+        margin: 0 0 4px 0;
+      }
+      .invoice-number {
+        font-size: 11pt;
+        color: #444444;
+        margin: 0 0 18px 0;
+      }
+      .section-heading {
+        font-size: 12pt;
+        font-weight: bold;
+        margin: 18px 0 8px 0;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .header-cell {
+        background-color: #f3f3f3;
+        font-weight: bold;
+      }
+      .grand-total-label {
+        font-weight: bold;
+        text-align: right;
+        padding: 8px;
+      }
+      .grand-total-value {
+        font-weight: bold;
+        text-align: right;
+        padding: 8px;
+      }
+      .empty-message {
+        color: #c23934;
+      }
+    </style>
+  </head>
 
-        <table class="meta-table">
-          <tr>
-            <td class="meta-label">Customer</td>
-            <td>{!invoice.Customer__r.Name}</td>
-          </tr>
-          <tr>
-            <td class="meta-label">Opportunity</td>
-            <td>{!invoice.Opportunity__r.Name}</td>
-          </tr>
-          <tr>
-            <td class="meta-label">Status</td>
-            <td>{!invoice.Status__c}</td>
-          </tr>
-        </table>
+  <body>
+    <apex:outputPanel rendered="{!hasInvoice}">
+      <div class="title">Invoice</div>
+      <div class="invoice-number">{!invoice.Name}</div>
 
-        <h2>Line Items</h2>
-        <table class="line-items">
-          <thead>
+      <!-- Invoice details table -->
+      <table
+        width="100%"
+        border="1"
+        cellpadding="8"
+        cellspacing="0"
+        style="border-collapse: collapse; border: 1px solid #000000"
+      >
+        <tr class="header-cell">
+          <th width="30%" align="left" style="border: 1px solid #000000">
+            Field
+          </th>
+          <th width="70%" align="left" style="border: 1px solid #000000">
+            Value
+          </th>
+        </tr>
+        <tr>
+          <td width="30%" style="border: 1px solid #000000"><b>Customer</b></td>
+          <td width="70%" style="border: 1px solid #000000">
+            {!invoice.Customer__r.Name}
+          </td>
+        </tr>
+        <tr>
+          <td width="30%" style="border: 1px solid #000000">
+            <b>Opportunity</b>
+          </td>
+          <td width="70%" style="border: 1px solid #000000">
+            {!invoice.Opportunity__r.Name}
+          </td>
+        </tr>
+        <tr>
+          <td width="30%" style="border: 1px solid #000000"><b>Status</b></td>
+          <td width="70%" style="border: 1px solid #000000">
+            {!invoice.Status__c}
+          </td>
+        </tr>
+      </table>
+
+      <div class="section-heading">Line Items</div>
+
+      <!-- Line items table -->
+      <table
+        width="100%"
+        border="1"
+        cellpadding="8"
+        cellspacing="0"
+        style="border-collapse: collapse; border: 1px solid #000000"
+      >
+        <colgroup>
+          <col width="42%" />
+          <col width="14%" />
+          <col width="22%" />
+          <col width="22%" />
+        </colgroup>
+        <thead>
+          <tr class="header-cell">
+            <th align="left" style="border: 1px solid #000000">Product</th>
+            <th align="center" style="border: 1px solid #000000">Quantity</th>
+            <th align="right" style="border: 1px solid #000000">Unit Price</th>
+            <th align="right" style="border: 1px solid #000000">Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <apex:repeat value="{!displayLineItems}" var="row">
             <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-              <th>Unit Price</th>
-              <th>Line Total</th>
+              <td align="left" style="border: 1px solid #000000">
+                {!row.productName}
+              </td>
+              <td align="center" style="border: 1px solid #000000">
+                {!row.quantity}
+              </td>
+              <td align="right" style="border: 1px solid #000000">
+                {!row.unitPrice}
+              </td>
+              <td align="right" style="border: 1px solid #000000">
+                {!row.lineTotal}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <apex:repeat value="{!lineItems}" var="item">
-              <tr>
-                <td>{!item.Product_Name__c}</td>
-                <td>{!item.Quantity__c}</td>
-                <td>{!item.Unit_Price__c}</td>
-                <td>{!item.Line_Total__c}</td>
-              </tr>
-            </apex:repeat>
-          </tbody>
-        </table>
+          </apex:repeat>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td
+              colspan="3"
+              class="grand-total-label"
+              align="right"
+              style="border: 1px solid #000000"
+            >
+              <b>Grand Total</b>
+            </td>
+            <td
+              class="grand-total-value"
+              align="right"
+              style="border: 1px solid #000000"
+            >
+              <b>{!formattedGrandTotal}</b>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </apex:outputPanel>
 
-        <div class="total-row">Grand Total: {!invoice.Total_Amount__c}</div>
-      </apex:outputPanel>
-
-      <apex:outputPanel rendered="{!!hasInvoice}">
-        <p class="empty-message">
-          Invoice not found. Provide a valid invoice Id.
-        </p>
-      </apex:outputPanel>
-    </body>
-  </html>
+    <apex:outputPanel rendered="{!!hasInvoice}">
+      <p class="empty-message">
+        Invoice not found. Provide a valid invoice Id.
+      </p>
+    </apex:outputPanel>
+  </body>
 </apex:page>

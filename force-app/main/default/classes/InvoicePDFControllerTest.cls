@@ -38,8 +38,13 @@ private class InvoicePDFControllerTest {
     System.assertEquals(true, controller.hasInvoice);
     System.assertEquals(invoice.Id, controller.invoice.Id);
     System.assertEquals(1500, controller.invoice.Total_Amount__c);
-    System.assertEquals(1, controller.lineItems.size());
-    System.assertEquals('Consulting', controller.lineItems[0].Product_Name__c);
+    System.assertEquals(1, controller.displayLineItems.size());
+    System.assertEquals(
+      'Consulting',
+      controller.displayLineItems[0].productName
+    );
+    System.assertNotEquals(null, controller.displayLineItems[0].lineTotal);
+    System.assertNotEquals(null, controller.formattedGrandTotal);
   }
 
   @isTest
@@ -51,6 +56,6 @@ private class InvoicePDFControllerTest {
     Test.stopTest();
 
     System.assertEquals(false, controller.hasInvoice);
-    System.assertEquals(0, controller.lineItems.size());
+    System.assertEquals(0, controller.displayLineItems.size());
   }
 }

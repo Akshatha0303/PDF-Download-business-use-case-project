@@ -1,10 +1,11 @@
 public with sharing class InvoicePDFController {
   public Invoice__c invoice { get; private set; }
-  public List<Invoice_Line_Item__c> lineItems { get; private set; }
+  public List<LineItemRow> displayLineItems { get; private set; }
   public Boolean hasInvoice { get; private set; }
+  public String formattedGrandTotal { get; private set; }
 
   public InvoicePDFController() {
-    lineItems = new List<Invoice_Line_Item__c>();
+    displayLineItems = new List<LineItemRow>();
     hasInvoice = false;
 
     String invoiceIdParam = ApexPages.currentPage().getParameters().get('id');
@@ -42,7 +43,61 @@ public with sharing class InvoicePDFController {
     }
 
     invoice = invoices[0];
-    lineItems = invoice.Invoice_Line_Items__r;
+    formattedGrandTotal = formatCurrency(invoice.Total_Amount__c);
+
+    for (Invoice_Line_Item__c item : invoice.Invoice_Line_Items__r) {
+      Decimal lineTotal = item.Line_Total__c;
+      if (
+        lineTotal == null &&
+        item.Quantity__c != null &&
+        item.Unit_Price__c != null
+      ) {
+        lineTotal = item.Quantity__c * item.Unit_Price__c;
+      }
+
+      displayLineItems.add(
+        new LineItemRow(
+          item.Product_Name__c,
+          formatInteger(item.Quantity__c),
+          formatCurrency(item.Unit_Price__c),
+          formatCurrency(lineTotal)
+        )
+      );
+    }
+
     hasInvoice = true;
+  }
+
+  private static String formatCurrency(Decimal amount) {
+    if (amount == null) {
+      return '0.00';
+    }
+    return amount.setScale(2).format();
+  }
+
+  private static String formatInteger(Decimal value) {
+    if (value == null) {
+      return '0';
+    }
+    return String.valueOf(value.intValue());
+  }
+
+  public class LineItemRow {
+    public String productName { get; private set; }
+    public String quantity { get; private set; }
+    public String unitPrice { get; private set; }
+    public String lineTotal { get; private set; }
+
+    public LineItemRow(
+      String productName,
+      String quantity,
+      String unitPrice,
+      String lineTotal
+    ) {
+      this.productName = productName;
+      this.quantity = quantity;
+      this.unitPrice = unitPrice;
+      this.lineTotal = lineTotal;
+    }
   }
 }
