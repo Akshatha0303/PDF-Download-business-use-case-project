@@ -16,6 +16,7 @@ const OPPORTUNITY_FIELDS = [
 
 let rowCounter = 1;
 
+// Creates a blank line-item row with a stable unique id for template keys.
 function createLineItemRow() {
   rowCounter += 1;
   return {
@@ -26,6 +27,7 @@ function createLineItemRow() {
   };
 }
 
+// Extracts a user-friendly message from Apex or LDS error objects.
 function reduceErrors(error) {
   if (!error) {
     return "Unknown error";
@@ -60,6 +62,7 @@ export default class InvoiceGenerator extends NavigationMixin(
 
   lineItems = [createLineItemRow()];
 
+  // LDS wire: pre-fills opportunity and customer when opened from Opportunity quick action.
   @wire(getRecord, { recordId: "$recordId", fields: OPPORTUNITY_FIELDS })
   wiredOpportunity({ data, error }) {
     if (data) {
@@ -74,38 +77,47 @@ export default class InvoiceGenerator extends NavigationMixin(
     }
   }
 
+  // Loads opportunity picklist options when component is inserted.
   connectedCallback() {
     this.loadOpportunityOptions();
   }
 
+  // True when wizard is on Step 1 (customer and opportunity).
   get isStep1() {
     return this.currentStep === "1";
   }
 
+  // True when wizard is on Step 2 (line items).
   get isStep2() {
     return this.currentStep === "2";
   }
 
+  // Progress indicator style for Step 1 pill.
   get step1Variant() {
     return this.isStep1 ? "shade" : "base";
   }
 
+  // Progress indicator style for Step 2 pill.
   get step2Variant() {
     return this.isStep2 ? "shade" : "base";
   }
 
+  // True when launched from an Opportunity record (quick action provides recordId).
   get launchedFromOpportunity() {
     return Boolean(this.recordId);
   }
 
+  // Opportunity field is read-only when recordId is set from quick action.
   get isOpportunityReadOnly() {
     return this.launchedFromOpportunity;
   }
 
+  // Disables Next until both opportunity and customer account are selected.
   get isNextDisabled() {
     return !this.selectedOpportunityId || !this.selectedCustomerId;
   }
 
+  // Getter: sums quantity × unit price across all line items.
   get grandTotal() {
     return this.lineItems.reduce((sum, item) => {
       const quantity = Number(item.quantity) || 0;
@@ -114,10 +126,12 @@ export default class InvoiceGenerator extends NavigationMixin(
     }, 0);
   }
 
+  // Formats grand total for display in the template.
   get formattedGrandTotal() {
     return this.grandTotal.toFixed(2);
   }
 
+  // Disables save while loading or when any line item is invalid.
   get isSaveDisabled() {
     if (this.isLoading) {
       return true;
@@ -138,6 +152,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     });
   }
 
+  // Adds per-row line total for display in Step 2 grid.
   get lineItemsWithTotals() {
     return this.lineItems.map((item) => {
       const quantity = Number(item.quantity) || 0;
@@ -149,6 +164,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     });
   }
 
+  // Imperative Apex: loads opportunities for combobox when not on a record page.
   async loadOpportunityOptions() {
     try {
       const opportunities = await getOpportunities();
@@ -166,6 +182,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     }
   }
 
+  // Sets customer and opportunity when user picks from combobox.
   handleOpportunityChange(event) {
     const opportunityId = event.detail.value;
     const selected = this.opportunityOptions.find(
@@ -182,6 +199,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     );
   }
 
+  // Stores selected opportunity and related account on the component state.
   applyOpportunitySelection(opportunityId, oppName, accountId, accountName) {
     this.selectedOpportunityId = opportunityId;
     this.opportunityName = oppName || "";
@@ -189,6 +207,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     this.customerName = accountName || "";
   }
 
+  // Validates Step 1 and advances to line items step.
   handleNext() {
     if (this.isNextDisabled) {
       this.showErrorToast(
@@ -200,14 +219,17 @@ export default class InvoiceGenerator extends NavigationMixin(
     this.currentStep = "2";
   }
 
+  // Returns wizard to Step 1 without clearing selections.
   handleBack() {
     this.currentStep = "1";
   }
 
+  // Appends a new empty line item row.
   handleAddRow() {
     this.lineItems = [...this.lineItems, createLineItemRow()];
   }
 
+  // Removes a line item row; requires at least one row to remain.
   handleRemoveRow(event) {
     const rowId = event.target.dataset.id;
     if (this.lineItems.length === 1) {
@@ -217,6 +239,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     this.lineItems = this.lineItems.filter((item) => item.id !== rowId);
   }
 
+  // Updates a line item field; uses spread for LWC reactivity.
   handleInputChange(event) {
     const rowId = event.target.dataset.id;
     const field = event.target.dataset.field;
@@ -231,6 +254,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     );
   }
 
+  // Saves invoice via Apex, opens PDF, shows toast, and navigates to invoice record.
   async handleSave() {
     if (this.isSaveDisabled) {
       this.showErrorToast(
@@ -285,6 +309,7 @@ export default class InvoiceGenerator extends NavigationMixin(
     }
   }
 
+  // Shows an error toast with the given title and message.
   showErrorToast(title, message) {
     this.dispatchEvent(
       new ShowToastEvent({

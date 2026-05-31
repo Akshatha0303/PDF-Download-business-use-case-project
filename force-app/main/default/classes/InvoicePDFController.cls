@@ -4,6 +4,7 @@ public with sharing class InvoicePDFController {
   public Boolean hasInvoice { get; private set; }
   public String formattedGrandTotal { get; private set; }
 
+  // Loads invoice and line items from URL id param; builds formatted rows for PDF table.
   public InvoicePDFController() {
     displayLineItems = new List<LineItemRow>();
     hasInvoice = false;
@@ -68,6 +69,7 @@ public with sharing class InvoicePDFController {
     hasInvoice = true;
   }
 
+  // Formats currency for PDF display (two decimal places).
   private static String formatCurrency(Decimal amount) {
     if (amount == null) {
       return '0.00';
@@ -75,6 +77,7 @@ public with sharing class InvoicePDFController {
     return amount.setScale(2).format();
   }
 
+  // Formats quantity as whole number string for PDF table cells.
   private static String formatInteger(Decimal value) {
     if (value == null) {
       return '0';
@@ -82,12 +85,14 @@ public with sharing class InvoicePDFController {
     return String.valueOf(value.intValue());
   }
 
+  // Wrapper holding pre-formatted line item values for Visualforce PDF rendering.
   public class LineItemRow {
     public String productName { get; private set; }
     public String quantity { get; private set; }
     public String unitPrice { get; private set; }
     public String lineTotal { get; private set; }
 
+    // Stores display strings for one PDF table row.
     public LineItemRow(
       String productName,
       String quantity,

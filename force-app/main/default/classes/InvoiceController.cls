@@ -1,4 +1,5 @@
 public with sharing class InvoiceController {
+  // Returns recent opportunities with account for Step 1 combobox (app page context).
   @AuraEnabled(cacheable=true)
   public static List<Opportunity> getOpportunities() {
     return [
@@ -10,6 +11,7 @@ public with sharing class InvoiceController {
     ];
   }
 
+  // Inserts invoice header and line items in one transaction; rolls back on any failure.
   @AuraEnabled
   public static Id saveInvoice(
     Invoice__c invoice,
@@ -33,6 +35,7 @@ public with sharing class InvoiceController {
     }
   }
 
+  // Validates required fields, line items, and aligns Total_Amount__c with line totals.
   private static void validateSaveRequest(
     Invoice__c invoice,
     List<Invoice_Line_Item__c> lineItems
