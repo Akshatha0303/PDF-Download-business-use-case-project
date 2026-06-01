@@ -140,34 +140,3 @@ force-app/main/default/
   permissionsets/Invoice_App_Access.permissionset-meta.xml
 scripts/apex/createInvoiceTestData.apex
 ```
-
-## Demo guide
-
-Use this outline when recording or presenting live. Have a test Opportunity ready and allow browser pop-ups for the PDF tab.
-
-| Time     | Topic               | What to show / say                                                                                                                                                  |
-| -------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0–1 min  | **Introduction**    | Problem: create invoice from Opportunity, save header + lines, download PDF. Stack: LWC → Apex → VF PDF → Navigation. Briefly show GitHub `force-app/` on `main`.   |
-| 1–2 min  | **Data model**      | `Invoice__c` (Customer, Opportunity, Status, Total); `Invoice_Line_Item__c` (master-detail, Product, Qty, Unit Price, formula Line Total).                          |
-| 2–3 min  | **App & entry**     | App Launcher → **Invoice Manager** → **Opportunities** → open record. Point out **Generate Invoice** quick action on highlights (modal, not embedded LWC on page).  |
-| 3–5 min  | **Step 1**          | LDS `@wire(getRecord)` when from quick action (read-only opp + account). Imperative `getOpportunities` on app page (combobox). Click **Next**; mention validation.  |
-| 5–7 min  | **Step 2**          | Template loop, **Add Row** / **Remove**, getter **`grandTotal`**, row totals. Show invalid row → save disabled / error toast.                                       |
-| 7–8 min  | **Save & PDF**      | **Save** → Apex savepoint transaction → PDF tab (`/apex/InvoicePDF?id=...`) with table layout → success toast.                                                      |
-| 8–9 min  | **Navigation**      | Land on **Invoice\_\_c** record; related line items; optional **Invoices** tab.                                                                                     |
-| 9–10 min | **Tests & wrap-up** | `InvoiceControllerTest`, `InvoicePDFControllerTest`; Jest for LWC. Recap: multi-step, LDS, single transaction, PDF, quick action, navigation, SLDS, error handling. |
-
-### Demo prep checklist
-
-- [ ] Deploy + assign `Invoice_App_Access`
-- [ ] Assign **Invoice Manager** app to profile (Setup → App Manager)
-- [ ] Add **Generate Invoice** to Opportunity layout actions
-- [ ] Run `createInvoiceTestData.apex`
-- [ ] Opportunity record page shows standard details (not full-page invoice form)
-- [ ] Browser allows pop-up for PDF
-
-## Submission checklist
-
-- [ ] Push repository to GitHub (both remotes if required by L&D)
-- [ ] Deploy to scratch org and verify quick action
-- [ ] Record demo video or schedule live demo
-- [ ] Email: repo link, README reference, demo link (scratch login only if required)
