@@ -9,7 +9,7 @@ Salesforce DX project for the **PDF Download** assignment: a multi-step Lightnin
 
 ### Where to see code on GitHub `main`
 
-1. Open **[https://github.com/Akshatha0303/PDF-Download](https://github.com/Akshatha0303/PDF-Download-business-use-case-project)** (or the submission repo after push).
+1. Open **(https://github.com/Akshatha0303/PDF-Download-business-use-case-project)** (or the submission repo after push).
 2. Select branch **`main`**.
 3. Browse **`force-app/main/default/`**:
    - `lwc/invoiceGenerator/` — multi-step UI
