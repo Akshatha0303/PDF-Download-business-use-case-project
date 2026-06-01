@@ -4,9 +4,7 @@ Salesforce DX project for the **PDF Download** assignment: a multi-step Lightnin
 
 ## GitHub repositories
 
-| Repository                                                                                                                    | Purpose                                   | Code on `main`?          |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------ |
-| [Akshatha0303/PDF-Download](https://github.com/Akshatha0303/PDF-Download)                                                     | Primary project remote (`origin`)         | Yes — full `force-app/`  |
+| Repository                                                                                                                 
 | [Akshatha0303/PDF-Download-business-use-case-project](https://github.com/Akshatha0303/PDF-Download-business-use-case-project) 
 
 ### Where to see code on GitHub `main`
