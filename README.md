@@ -141,9 +141,9 @@ force-app/main/default/
 scripts/apex/createInvoiceTestData.apex
 ```
 
-## 10-minute demo script
+## Demo guide
 
-Use this outline when recording or presenting live (~10 minutes). Have a test Opportunity ready and allow browser pop-ups for the PDF tab.
+Use this outline when recording or presenting live. Have a test Opportunity ready and allow browser pop-ups for the PDF tab.
 
 | Time     | Topic               | What to show / say                                                                                                                                                  |
 | -------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
