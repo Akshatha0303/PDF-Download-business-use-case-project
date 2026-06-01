@@ -7,7 +7,7 @@ Salesforce DX project for the **PDF Download** assignment: a multi-step Lightnin
 | Repository                                                                                                                    | Purpose                                   | Code on `main`?          |
 | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------ |
 | [Akshatha0303/PDF-Download](https://github.com/Akshatha0303/PDF-Download)                                                     | Primary project remote (`origin`)         | Yes — full `force-app/`  |
-| [Akshatha0303/PDF-Download-business-use-case-project](https://github.com/Akshatha0303/PDF-Download-business-use-case-project) | L&D submission repo (`submission` remote) | Push with commands below |
+| [Akshatha0303/PDF-Download-business-use-case-project](https://github.com/Akshatha0303/PDF-Download-business-use-case-project) 
 
 ### Where to see code on GitHub `main`
 
@@ -21,9 +21,6 @@ Salesforce DX project for the **PDF Download** assignment: a multi-step Lightnin
    - `applications/Invoice_Manager.app-meta.xml` — Lightning app
 
 ### Push to the submission repository
-
-```bash
-cd "d:\PDF Download\PDF Download"
 git remote add submission https://github.com/Akshatha0303/PDF-Download-business-use-case-project.git
 git push -u submission main
 ```
@@ -91,23 +88,11 @@ This creates **Acme Corporation** (Account) and **Acme Q2 Services** (Opportunit
 
 ## Run the application
 
-### If **Invoice Manager** is missing from App Launcher
-
-Custom apps must be **deployed** and **assigned to your profile**:
-
-1. **Setup** → **App Manager** → find **Invoice Manager**
-   - Not listed → run `sf project deploy start --source-dir force-app`
-2. Click **▼** next to **Invoice Manager** → **Edit** → enable **System Administrator** (your profile) → **Save**
-3. Refresh browser → **App Launcher** → search **Invoice Manager**
-
 Alternatively use the **Sales** app and open Opportunities from there (quick action still works on the record).
-
-### End-user steps
 
 1. Open **Invoice Manager** from the App Launcher.
 2. Go to **Opportunities** and open a test opportunity (or any opportunity with an account).
 3. Click **Generate Invoice** on the opportunity action bar (modal opens — not the full record page).
-   - If missing: **Setup → Object Manager → Opportunity → Page Layouts → Opportunity Layout → Mobile & Lightning Actions**, drag **Generate Invoice** into **Salesforce Mobile and Lightning Experience Actions**, save.
 4. **Step 1:** Confirm opportunity and customer (account), then click **Next**.
 5. **Step 2:** Add line items, review grand total, click **Save Invoice & Download PDF**.
 6. PDF opens in a new tab; you are redirected to the new **Invoice** record.
@@ -116,13 +101,6 @@ Alternatively use the **Sales** app and open Opportunities from there (quick act
 
 ```bash
 sf apex run test --class-names InvoiceControllerTest,InvoicePDFControllerTest --result-format human --code-coverage --wait 10
-```
-
-## LWC unit tests
-
-```bash
-npm install
-npm run test:unit
 ```
 
 ## Project structure
